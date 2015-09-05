@@ -2,6 +2,9 @@ KwlKit - a small library to uncompress kwl - a simple experimental lossy audio c
 (royalty and patent free)
 (c) Martin Sedlak (mar) 2015
 
+repository: https://github.com/kmar/KwlKit
+encoder can be found in a release here: https://github.com/kmar/KwlKit/releases
+
 library integration: just add KwlKit.cpp to your project
 for additional information see Tutorial/KwlToRaw.cpp
 
