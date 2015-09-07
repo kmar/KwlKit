@@ -45,13 +45,15 @@ public:
 		}
 	}
 
+// this is initially disabled - VS2012 compiler has problems in x64 mode, generating 2x slower code here!
+#if KWLKIT_USE_COMPLEX_OPS
 	template< Int p >
 	void DoFftLoop( Complex<T> *data )
 	{
 		Int step = 1 << p;
 		Int step2 = step * 2;
 		Complex<T> s(1);
-		// this micro-optimization has no effect
+
 		const Complex<T> &w = twiddle[p];
 		for ( Int i=0; i<step; i++ ) {
 			for ( Int j=i; j<n; j += step2 ) {
@@ -63,6 +65,33 @@ public:
 			s *= w;
 		}
 	}
+#else
+	template< Int p >
+	void DoFftLoop( Complex<T> *data )
+	{
+		Int step = 1 << p;
+		Int step2 = step * 2;
+		Complex<T> tmp, s(1);
+		const Complex<T> &w = twiddle[p];
+
+		for ( Int i=0; i<step; i++ ) {
+			for ( Int j=i; j<n; j += step2 ) {
+				Int j2 = j + step;
+				Complex<T> &d2 = data[j2];
+				Complex<T> &d1 = data[j];
+				tmp.re = Complex<T>::MulRe( d2, s );
+				tmp.im = Complex<T>::MulIm( d2, s );
+				d2.re = d1.re - tmp.re;
+				d2.im = d1.im - tmp.im;
+				d1.re += tmp.re;
+				d1.im += tmp.im;
+			}
+			tmp.re = Complex<T>::MulRe( s, w );
+			s.im = Complex<T>::MulIm( s, w );
+			s.re = tmp.re;
+		}
+	}
+#endif
 
 	// do in-place DIT FFT on complex data
 	// (radix 2)
@@ -114,8 +143,9 @@ public:
 			Int step = 1 << p;
 			Int step2 = step * 2;
 			Complex<T> s(1);
-			// this micro-optimization has no effect
 			const Complex<T> &w = twiddle[p];
+
+#if KWLKIT_USE_COMPLEX_OPS
 			for ( Int i=0; i<step; i++ ) {
 				for ( Int j=i; j<n; j += step2 ) {
 					Int j2 = j + step;
@@ -125,6 +155,25 @@ public:
 				}
 				s *= w;
 			}
+#else
+			Complex<T> tmp;
+			for ( Int i=0; i<step; i++ ) {
+				for ( Int j=i; j<n; j += step2 ) {
+					Int j2 = j + step;
+					Complex<T> &d2 = data[j2];
+					Complex<T> &d1 = data[j];
+					tmp.re = Complex<T>::MulRe( d2, s );
+					tmp.im = Complex<T>::MulIm( d2, s );
+					d2.re = d1.re - tmp.re;
+					d2.im = d1.im - tmp.im;
+					d1.re += tmp.re;
+					d1.im += tmp.im;
+				}
+				tmp.re = Complex<T>::MulRe( s, w );
+				s.im = Complex<T>::MulIm( s, w );
+				s.re = tmp.re;
+			}
+#endif
 		}
 	}
 

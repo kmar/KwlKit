@@ -112,6 +112,13 @@ public:
 	inline Complex GetExpi( const T &x ) const {
 		return Complex( CosRad(x), SinRad(x) );
 	}
+
+	static inline T MulRe( const Complex &x, const Complex &y ) {
+		return x.re * y.re - x.im * y.im;
+	}
+	static inline T MulIm( const Complex &x, const Complex &y ) {
+		return x.im * y.re + x.re * y.im;
+	}
 };
 
 }
