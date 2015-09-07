@@ -11,11 +11,6 @@
 namespace KwlKit
 {
 
-// not used
-inline Float KWLKIT_VISIBLE BlackmanWindow( Int x, Int N ) {
-	return 0.42659f - 0.49656f*CosRad( 2.0f*PI*x / (N-1) ) + 0.076849f*CosRad( 4.0f*PI*x / (N-1) );
-}
-
 // reference: http://www.xiph.org/vorbis/doc/Vorbis_I_spec.html
 inline Float KWLKIT_VISIBLE VorbisWindow( Int x, Int N )
 {
