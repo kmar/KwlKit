@@ -270,6 +270,10 @@ void Inflate::BuildFixedDistHuffman()
 
 void Inflate::Init()
 {
+	// "init" format/crcFunction just to keep some static analyzers happy
+	format = INF_RAW;
+	crcFunction = 0;
+
 	huf[0].Init( 288 );
 	huf[1].Init( 32 );
 	zipCrc = 0;
@@ -935,7 +939,12 @@ loopstate:
 
 void Inflate::ResetState()
 {
+	totalOutputSize = 0;
+	crc = 0;
+	uncLen = 0;
+	unixTime = 0;
 	state = INF_STATE_BEGIN;
+	nextBlockState = INF_STATE_ERROR;
 	dictionary.Resize( DICTIONARY_SIZE );
 	dictionary.Fill(0);
 	dictIndex = dictFlushIndex = 0;
