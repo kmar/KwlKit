@@ -38,7 +38,7 @@ UInt GetCrc32( const void *buf, size_t sz, UInt crc )
 
 #if KWLKIT_USE_CRC32_SLICING
 	UInt align = (4u - ((UInt)(UIntPtr)b & 3)) & 3u;
-	if ( sz >= 4 ) {
+	if ( sz >= 4 + align ) {
 		sz -= align;
 		while ( align-- ) {
 			crc = (crc >> 8) ^ crc32Table[ (crc ^ *b++) & 255 ];
