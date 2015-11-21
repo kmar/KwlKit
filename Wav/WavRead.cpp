@@ -169,6 +169,10 @@ bool WavRead::IsDone() const {
 	return doneFlag;
 }
 
+bool WavRead::IsLooping() const {
+	return doLoop;
+}
+
 bool WavRead::SeekPosition( Float pos )
 {
 	if ( !isOpen ) {

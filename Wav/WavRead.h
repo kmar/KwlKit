@@ -52,6 +52,8 @@ public:
 	Float GetPosition() const;
 	// playback done?
 	bool IsDone() const;
+	// is looping?
+	bool IsLooping() const;
 
 	// (very slow, can break playback!)
 	bool SeekPosition( Float pos );
